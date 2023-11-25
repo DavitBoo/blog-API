@@ -3,16 +3,14 @@ import { Label } from "../models/label";
 
 const router = express.Router();
 // Create label
-router.post("/:labelId", async (res, req) => {
-  async (req, res) => {
+router.post("/:labelId", async (req, res) => {
     const { name, description } = req.body;
-    const postId = req.params.postId;
+    const postId = req.params.labelId;
 
     const newLabel = new Label({ name, description });
     await newLabel.save();
 
     res.status(201).send({ message: "Label created successfully" });
-  };
 });
 
 // Get all labels
