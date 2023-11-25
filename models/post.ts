@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { IUser } from './user-model';
+import mongoose, { Schema, Document } from "mongoose";
+import { IUser } from "./user";
 
 const postSchema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
   thumbnail: { type: String, required: true },
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   timestamp: { type: Date, required: true },
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: "User" },
   category: { type: String, required: true },
   labels: [{ type: String }],
   published: { type: Boolean, required: true, default: false },
@@ -26,4 +26,4 @@ export interface IPost extends Document {
   published: boolean;
 }
 
-export const Post = mongoose.model<IPost>('Post', postSchema);
+export const Post = mongoose.model<IPost>("Post", postSchema);
