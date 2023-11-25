@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "outDir": "./dist",
+      "esModuleInterop": true,
+      "strict": true,
+      "downlevelIteration": true
+    },
+    "include": ["dist/**/*", "app.ts"],
+    "exclude": ["node_modules"]
+  }
