@@ -1,5 +1,8 @@
 import express from 'express';
 
+import { User } from './models/user';
+
+
 const app = express();
 const port = process.env.PORT || 3000;
 
