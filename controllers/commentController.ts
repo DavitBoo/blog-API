@@ -4,7 +4,7 @@ import { Comment } from '../models/comment';
 const router = express.Router();
 
 // Create comment route
-router.post('/:postId', async (req, res) => {
+router.post('/posts/:id/comments/:postId', async (req, res) => {
   const { username, email, commentContent } = req.body;
   const postId = req.params.postId;
 
@@ -15,8 +15,8 @@ router.post('/:postId', async (req, res) => {
 });
 
 // Get all comments for a post route
-router.get('/:postId', async (req, res) => {
-  const postId = req.params.postId;
+router.get('/posts/:id/comments', async (req, res) => {
+  const postId = req.params.id;
   const comments = await Comment.find({ postId });
   res.send(comments);
 });

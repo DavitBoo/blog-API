@@ -14,10 +14,10 @@ router.post("/:labelId", async (req, res) => {
 });
 
 // Get all labels
-router.get('/:postId', async (req, res) => {
-    const postId = req.params.postId;
-    const labels = await Label.find({ postId });
-    res.send(labels);
-  });
+// router.get('/:postId', async (req, res) => {
+//     const postId = req.params.postId;
+//     const labels = await Label.find({ postId });
+//     res.send(labels);
+//   });
 
 export default router;
