@@ -8,7 +8,6 @@ const postSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   timestamp: { type: Date, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User" },
-  category: { type: String, required: true },
   labels: [{ type: String }],
   published: { type: Boolean, required: true, default: false },
 });
@@ -21,7 +20,6 @@ export interface IPost extends Document {
   comments: Array<string>; // IDs of comments
   timestamp: Date;
   author: IUser; // User object
-  category: string;
   labels: Array<string>;
   published: boolean;
 }

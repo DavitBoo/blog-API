@@ -7,8 +7,29 @@ import postRouter from './controllers/postController';
 import commentRouter from './controllers/commentController';
 import labelRouter from './controllers/labelController';
 
+require("dotenv").config();
+
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(express.json());
+
+//set up mongoose
+import mongoose from "mongoose";
+mongoose.set("strictQuery", false);
+
+if (!process.env.MONGODB_URI) {
+  throw new Error('Missing mongo URI environment variable');
+}
+
+const mongoDB = process.env.MONGODB_URI;
+
+main().catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect(mongoDB);
+  console.log('connection to DB success');
+}
 
 app.use('/api', userRouter);
 app.use('/api', postRouter);
