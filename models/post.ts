@@ -6,7 +6,7 @@ const postSchema = new Schema({
   body: { type: String, required: true },
   thumbnail: { type: String, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  timestamp: { type: Date, required: true },
+  timestamp: { type: Date, default: Date.now() },
   author: { type: Schema.Types.ObjectId, ref: "User" },
   labels: [{ type: String }],
   published: { type: Boolean, required: true, default: false },

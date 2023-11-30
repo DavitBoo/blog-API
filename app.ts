@@ -43,6 +43,11 @@ app.get("/", (req, res) => {
   res.send("Bienvenido a la API de mi blog!!!");
 });
 
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

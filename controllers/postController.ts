@@ -4,7 +4,7 @@ import { Post } from "../models/post";
 const router = express.Router();
 
 // Create post route
-router.post("/", async (req, res) => {
+router.post("/post", async (req, res) => {
   const { title, body, thumbnail, category, labels } = req.body;
 
   const newPost = new Post({ title, body, thumbnail, category, labels });
