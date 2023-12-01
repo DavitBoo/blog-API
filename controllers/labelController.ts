@@ -14,10 +14,16 @@ router.post("/:labelId", async (req, res) => {
 });
 
 // Get all labels
-// router.get('/:postId', async (req, res) => {
-//     const postId = req.params.postId;
-//     const labels = await Label.find({ postId });
-//     res.send(labels);
-//   });
+router.get('/:labelId', async (req, res) => {
+    const postId = req.params.labelId;
+    try {
+        const labels = await Label.find({ postId });
+        res.json(labels);
+    } catch (error: any) {
+        // Handle the error
+        res.status(error.status || 500).json({ error: error.message });
+        return;
+      }
+  });
 
 export default router;

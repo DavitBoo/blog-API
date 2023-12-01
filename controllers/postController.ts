@@ -15,19 +15,28 @@ router.post("/post", async (req, res) => {
 
 // Get all posts route
 router.get("posts/", async (req, res) => {
-  const posts = await Post.find();
-  res.send(posts);
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (error: any) {
+    res.status(error.status || 500).json({ error: error.message });
+    return;
+  }
 });
 
 // Get single post route
 router.get("posts/:postId", async (req, res) => {
-  const post = await Post.findById(req.params.postId);
-  if (!post) {
-    res.status(404).json({ message: "Post not found" });
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
+    res.json(post);
+  } catch (error: any) {
+    res.status(error.status || 500).json({ error: error.message });
     return;
   }
-
-  res.json(post);
 });
 
 router.put("/posts/:id", async (req, res) => {
