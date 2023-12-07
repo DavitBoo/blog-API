@@ -1,5 +1,7 @@
 import express from "express";
 import { Post } from "../models/post";
+import { Label } from "../models/label";
+
 
 const router = express.Router();
 
@@ -16,8 +18,22 @@ router.post("/posts", async (req, res) => {
 // Get all posts route
 router.get("posts/", async (req, res) => {
   try {
+
+    const labelName = req.query.label;
+    if (labelName) {
+      const label = await Label.findOne({ name: labelName });
+
+      if (!label) {
+        return res.status(404).json({ error: "Label not found" });
+      }
+
+      const posts = await Post.find({ labels: label._id });
+      return res.json(posts);
+    }
+
     const posts = await Post.find();
-    res.json(posts);
+    return res.json(posts);
+
   } catch (error: any) {
     res.status(error.status || 500).json({ error: error.message });
     return;
@@ -50,5 +66,6 @@ router.delete("/posts/:id", async (req, res) => {
   // code to delete an article...
   res.json({ deleted: id });
 });
+
 
 export default router;
