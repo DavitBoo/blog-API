@@ -1,4 +1,5 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import { Jwt } from "jsonwebtoken";
 
 import { User } from "./models/user";
 
@@ -6,11 +7,18 @@ import userRouter from "./controllers/userController";
 import postRouter from "./controllers/postController";
 import commentRouter from "./controllers/commentController";
 import labelRouter from "./controllers/labelController";
+import apicache from 'apicache';
 
 import cors from "cors";
 require("dotenv").config();
 
 const app = express();
+
+let cache = apicache.middleware;
+app.use(cache('5 minutes', {
+  maxAge: 300,
+}));
+
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -19,6 +27,7 @@ app.use(cors());
 
 //set up mongoose
 import mongoose from "mongoose";
+import { JsonWebTokenError } from "jsonwebtoken";
 mongoose.set("strictQuery", false);
 
 if (!process.env.MONGODB_URI) {
@@ -40,10 +49,10 @@ app.use("/api", commentRouter);
 app.use("/api", labelRouter);
 
 app.get("/", (req, res) => {
-  res.send("Bienvenido a la API de mi blog!!!");
+  res.json("Bienvenido a la API de mi blog!!!");
 });
 
-app.use((err: any, req: any, res: any, next: any) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });
