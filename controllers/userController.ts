@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import { User } from "../models/user";
 
 const router = express.Router();
@@ -28,9 +29,16 @@ router.post("/register", async (req, res) => {
 
 // Login user route
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
+  // const { username, password } = req.body;
+  const { username, password } = {username:'David', password:'password'};
+  
   const user = await User.findOne({ username });
+  jwt.sign({user}, 'secretkey', (err: any, token: any) => {
+    res.json({
+      token: token
+    })
+  } );
+  
 
 });
 
