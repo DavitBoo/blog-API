@@ -1,6 +1,10 @@
 import express from "express";
-import jwt from "jsonwebtoken";
-import { User } from "../models/user";
+import jwt, { SignCallback } from "jsonwebtoken";
+import { User, IUser } from "../models/user";
+
+interface JwtPayload {
+  user: IUser; // Assuming UserType is the type of your user model
+}
 
 const router = express.Router();
 
@@ -39,16 +43,46 @@ router.post("/login", async (req, res) => {
     })
   } );
   
-
 });
+
+
+// // Login user route
+// router.post("/login", async (req, res) => {
+//   const { username, password } = req.body;
+  
+//   const user: IUser | null = await User.findOne({ username });
+
+//   if (!user) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+
+//   // Sign the token with a specific callback
+//   const signCallback: SignCallback = (err, token) => {
+//     if (err) {
+//       return res.status(500).json({ message: "Error signing token" });
+//     }
+
+//     const nonNullableToken: string = token || '';
+
+//     // Use the JwtToken type for the token response
+//     const tokenResponse: JwtToken = { token: nonNullableToken };
+
+//     res.json(tokenResponse);
+//   };
+
+//   // Use the JwtPayload type for the payload
+//   jwt.sign({ user } as JwtPayload, 'secretkey', signCallback);
+// });
+
 
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
-  } catch (error: any) {
-    res.status(error.status || 500).json({ error: error.message });
-    return;
+  } catch (error) {
+
+    console.error("Error al obtener usuarios:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

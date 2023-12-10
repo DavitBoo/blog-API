@@ -23,9 +23,9 @@ router.get('/posts/:id/comments', async (req, res) => {
   try {
     const comments = await Comment.find({ postId });
     res.json(comments);
-  } catch (error: any) {
+  } catch (error) {
     // Handle the error
-    res.status(error.status || 500).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
     return;
   }
 

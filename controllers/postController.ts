@@ -34,8 +34,8 @@ router.get("posts/", async (req, res) => {
     const posts = await Post.find();
     return res.json(posts);
 
-  } catch (error: any) {
-    res.status(error.status || 500).json({ error: error.message });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
     return;
   }
 });
@@ -49,8 +49,8 @@ router.get("posts/:postId", async (req, res) => {
       return;
     }
     res.json(post);
-  } catch (error: any) {
-    res.status(error.status || 500).json({ error: error.message });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
     return;
   }
 });

@@ -19,9 +19,9 @@ router.get('/:labelId', async (req, res) => {
     try {
         const labels = await Label.find({ labelId });
         res.json(labels);
-    } catch (error: any) {
+    } catch (error) {
         // Handle the error
-        res.status(error.status || 500).json({ error: error.message });
+        res.status(500).json({ error: "Internal server error" });
         return;
       }
   });
