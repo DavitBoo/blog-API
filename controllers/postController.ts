@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Post } from "../models/post";
 import { Label } from "../models/label";
 
@@ -6,7 +6,7 @@ import { Label } from "../models/label";
 const router = express.Router();
 
 // Create post route
-router.post("/posts", async (req, res) => {
+router.post("/posts", verifyToken,  async (req, res) => {
   const { title, body, thumbnail, category, labels } = req.body;
 
   const newPost = new Post({ title, body, thumbnail, category, labels });
@@ -16,7 +16,7 @@ router.post("/posts", async (req, res) => {
 });
 
 // Get all posts route
-router.get("posts/", async (req, res) => {
+router.get("/posts", async (req, res) => {
   try {
 
     const labelName = req.query.label;
@@ -41,7 +41,7 @@ router.get("posts/", async (req, res) => {
 });
 
 // Get single post route
-router.get("posts/:postId", async (req, res) => {
+router.get("/posts/:postId", async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
     if (!post) {
@@ -67,5 +67,24 @@ router.delete("/posts/:id", async (req, res) => {
   res.json({ deleted: id });
 });
 
+//format of token 
+//Authorization: Bearer <access_token>
+
+// verify token
+function verifyToken(req: Request, res: Response, next: NextFunction){
+  //get auth header value
+  const bearerHeader = req.headers['authorization']
+  console.log(bearerHeader);
+
+  // Check if bearer is undefined
+  if(typeof bearerHeader !== undefined){
+    console.log('test');
+
+  }else {
+    //forbidden
+    console.log('test :(');
+    res.sendStatus(403)
+  }
+}
 
 export default router;

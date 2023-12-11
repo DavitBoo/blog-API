@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ username });
   jwt.sign({user}, 'secretkey', (err: any, token: any) => {
     res.json({
-      token: token
+      token
     })
   } );
   
