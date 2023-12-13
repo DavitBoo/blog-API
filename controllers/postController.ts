@@ -73,12 +73,13 @@ router.delete("/posts/:id", async (req, res) => {
 // verify token
 function verifyToken(req: Request, res: Response, next: NextFunction){
   //get auth header value
-  const bearerHeader = req.headers['authorization']
-  console.log(bearerHeader);
+  const bearerHeader = req.headers['authorization'];
+  // console.log(bearerHeader);
 
   // Check if bearer is undefined
-  if(typeof bearerHeader !== undefined){
-    console.log('test');
+  if(bearerHeader !== undefined){
+    console.log(bearerHeader);
+    res.sendStatus(404);  
 
   }else {
     //forbidden
