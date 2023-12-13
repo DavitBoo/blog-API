@@ -1,18 +1,33 @@
 import express, { NextFunction, Request, Response } from "express";
+import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
+
 import { Post } from "../models/post";
 import { Label } from "../models/label";
 
 
 const router = express.Router();
 
+interface CustomRequest extends Request {
+  token: string | JwtPayload;
+ }
+
 // Create post route
 router.post("/posts", verifyToken,  async (req, res) => {
-  const { title, body, thumbnail, category, labels } = req.body;
+  const tokenString = (req as CustomRequest).token as string; // because of TS types
+  jwt.verify(tokenString, 'secretkey', async(err, authData) => {
+    if(err){
+      res.sendStatus(403);
+    }else{
+      //i think I wont need an else since it will stop in the error if there is one
+      const { title, body, thumbnail, category, labels } = req.body;
+      console.log(authData);
+      const newPost = new Post({ title, body, thumbnail, category, labels });
+      await newPost.save();
+    
+      res.status(201).send({ message: "Post created successfully" });
 
-  const newPost = new Post({ title, body, thumbnail, category, labels });
-  await newPost.save();
-
-  res.status(201).send({ message: "Post created successfully" });
+    }
+  });
 });
 
 // Get all posts route
@@ -78,8 +93,13 @@ function verifyToken(req: Request, res: Response, next: NextFunction){
 
   // Check if bearer is undefined
   if(bearerHeader !== undefined){
-    console.log(bearerHeader);
-    res.sendStatus(404);  
+    // split at the space
+    const bearer = bearerHeader.split(' ');
+    const bearerToken = bearer[1];
+    //set the token 
+    (req as CustomRequest).token = bearerToken;
+    
+    next();
 
   }else {
     //forbidden
