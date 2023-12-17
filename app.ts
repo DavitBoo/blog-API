@@ -15,8 +15,8 @@ require("dotenv").config();
 const app = express();
 
 //parece que funciona pero creo que debería establecer el Cache-control en el header
-let cache = apicache.middleware;
-app.use(cache('5 minutes'));
+// let cache = apicache.middleware;
+// app.use(cache('5 minutes'));
 
 const port = process.env.PORT || 3000;
 
