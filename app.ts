@@ -15,6 +15,7 @@ require("dotenv").config();
 const app = express();
 
 //parece que funciona pero creo que debería establecer el Cache-control en el header
+// ! generaba error con la verificación del token. Al expirar el token antes me estaba volviendo loco haciendo pruebas
 // let cache = apicache.middleware;
 // app.use(cache('5 minutes'));
 
