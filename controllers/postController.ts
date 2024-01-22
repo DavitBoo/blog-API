@@ -14,7 +14,6 @@ interface CustomRequest extends Request {
 
 // Create post route
 router.post("/posts", verifyToken,  async (req, res) => {
-  console.log('hey brother');
   const tokenString = (req as CustomRequest).token as string; // because of TS types
   jwt.verify(tokenString, 'secretkey', async(err, authData) => {
     console.log(authData);

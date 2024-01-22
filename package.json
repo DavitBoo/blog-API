@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.ts"
+    "start": "nodemon app.ts",
+    "tsc": "tsc -watch",
+    "dev": "pm2 start process.json && pm2 logs"
   },
   "keywords": [],
   "author": "",
