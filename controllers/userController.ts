@@ -33,8 +33,8 @@ router.post("/register", async (req, res) => {
 
 // Login user route
 router.post("/login", async (req, res) => {
-  // const { username, password } = req.body;
-  const { username, password } = {username:'David', password:'password'};
+  // const { username, password } = {username:'David', password:'password'};
+  const { username, password } = req.body;
   
   const user = await User.findOne({ username });
   jwt.sign({user}, 'secretkey', {expiresIn: 30}, (err: Error | null, token?: string) => {

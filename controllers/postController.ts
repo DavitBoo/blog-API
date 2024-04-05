@@ -33,7 +33,7 @@ router.post("/posts", verifyToken,  async (req, res) => {
       res.status(201).send({ message: "Post created successfully" });
 
     }
-  });
+  }); 
 });
 
 // Get all posts route
