@@ -37,8 +37,8 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Login user route
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { username, password } = req.body;
-    const { username, password } = { username: 'David', password: 'password' };
+    // const { username, password } = {username:'David', password:'password'};
+    const { username, password } = req.body;
     const user = yield user_1.User.findOne({ username });
     jsonwebtoken_1.default.sign({ user }, 'secretkey', { expiresIn: 30 }, (err, token) => {
         res.json({

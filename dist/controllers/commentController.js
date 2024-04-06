@@ -16,10 +16,10 @@ const express_1 = __importDefault(require("express"));
 const comment_1 = require("../models/comment");
 const router = express_1.default.Router();
 // Create comment route
-router.post('/posts/:id/comments/:postId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/posts/:id/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, commentContent } = req.body;
-    const postId = req.params.postId;
-    const newComment = new comment_1.Comment({ username, email, commentContent, postId });
+    // const postId = req.params.id;
+    const newComment = new comment_1.Comment({ username, email, commentContent /*, postId*/ });
     yield newComment.save();
     res.status(201).send({ message: 'Comment created successfully' });
 }));
