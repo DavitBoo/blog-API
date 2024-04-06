@@ -15,7 +15,7 @@ interface CustomRequest extends Request {
 router.post("/posts", verifyToken, async (req, res) => {
   const tokenString = (req as CustomRequest).token as string; // because of TS types
   jwt.verify(tokenString, "secretkey", async (err, authData) => {
-    console.log(authData);
+    console.log(req.body);
     if (err) {
       console.error(err);
       if (err.name === "TokenExpiredError") {

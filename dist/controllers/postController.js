@@ -22,7 +22,7 @@ const router = express_1.default.Router();
 router.post("/posts", verifyToken_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tokenString = req.token; // because of TS types
     jsonwebtoken_1.default.verify(tokenString, "secretkey", (err, authData) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(authData);
+        console.log(req.body);
         if (err) {
             console.error(err);
             if (err.name === "TokenExpiredError") {
