@@ -1,45 +1,48 @@
 import express, { NextFunction, Request, Response } from "express";
-import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 import { Post } from "../models/post";
 import { Label } from "../models/label";
-import verifyToken  from "../middleware/verifyToken";
-
+import verifyToken from "../middleware/verifyToken";
 
 const router = express.Router();
 
 interface CustomRequest extends Request {
   token: string | JwtPayload;
- }
+}
 
 // Create post route
-router.post("/posts", verifyToken,  async (req, res) => {
+router.post("/posts", verifyToken, async (req, res) => {
   const tokenString = (req as CustomRequest).token as string; // because of TS types
-  jwt.verify(tokenString, 'secretkey', async(err, authData) => {
+  jwt.verify(tokenString, "secretkey", async (err, authData) => {
     console.log(authData);
     if (err) {
       console.error(err);
-      if (err.name === 'TokenExpiredError') {
-        res.status(401).send({ error: 'Token has expired' });
+      if (err.name === "TokenExpiredError") {
+        res.status(401).send({ error: "Token has expired" });
       } else {
-        res.status(401).send({ error: 'Unauthorized' });
+        res.status(401).send({ error: "Unauthorized" });
       }
-    }else{
+    } else {
+      
       //i think I wont need an else since it will stop in the error if there is one
       const { title, body, thumbnail, category, labels } = req.body;
       const newPost = new Post({ title, body, thumbnail, category, labels });
       await newPost.save();
-    
-      res.status(201).send({ message: "Post created successfully" });
 
+      res.json({
+        message: "El post se ha creado",
+        authData,
+      });
+
+      // res.status(201).send({ message: "Post created successfully" });
     }
-  }); 
+  });
 });
 
 // Get all posts route
 router.get("/posts", async (req, res) => {
   try {
-
     const labelName = req.query.label;
     if (labelName) {
       const label = await Label.findOne({ name: labelName });
@@ -54,7 +57,6 @@ router.get("/posts", async (req, res) => {
 
     const posts = await Post.find();
     return res.json(posts);
-
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
     return;
@@ -87,7 +89,5 @@ router.delete("/posts/:id", async (req, res) => {
   // code to delete an article...
   res.json({ deleted: id });
 });
-
-
 
 export default router;
