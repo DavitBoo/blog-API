@@ -16,9 +16,9 @@ const express_1 = __importDefault(require("express"));
 const label_1 = require("../models/label");
 const router = express_1.default.Router();
 // Create label
-router.post("/:labelId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/label", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description } = req.body;
-    const postId = req.params.labelId;
+    // const postId = req.params.labelId;
     const newLabel = new label_1.Label({ name, description });
     yield newLabel.save();
     res.status(201).send({ message: "Label created successfully" });
