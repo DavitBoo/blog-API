@@ -24,7 +24,7 @@ router.post("/label", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.status(201).send({ message: "Label created successfully" });
 }));
 // Get all labels
-router.get('/:labelId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/label/:labelId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const labelId = req.params.labelId;
     try {
         const labels = yield label_1.Label.find({ labelId });
