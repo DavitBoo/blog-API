@@ -24,7 +24,18 @@ router.post("/label", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.status(201).send({ message: "Label created successfully" });
 }));
 // Get all labels
-router.get('/label/:labelId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/label", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const label = yield label_1.Label.find();
+        return res.json(label);
+    }
+    catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+        return;
+    }
+}));
+// Get a label
+router.get("/label/:labelId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const labelId = req.params.labelId;
     try {
         const labels = yield label_1.Label.find({ labelId });
