@@ -14,19 +14,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = require("../models/user");
 const router = express_1.default.Router();
 // Create user route
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     try {
-        // Check if user already exists
+        // Check if user already exists in the data base
         const userExists = yield user_1.User.findOne({ username });
         if (userExists) {
             return res.status(400).json({ message: "Username already exists" });
         }
-        // Create a new user
-        const newUser = new user_1.User({ username, password });
+        //encrypt the password
+        const salt = bcrypt_1.default.genSaltSync(10);
+        const hash = bcrypt_1.default.hashSync(password, salt);
+        // Create a new user 
+        const newUser = new user_1.User({ username, password: hash });
         yield newUser.save();
         res.status(201).json({ message: "User created successfully" });
     }
