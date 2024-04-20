@@ -24,6 +24,7 @@ router.post("/register", async (req, res) => {
     //encrypt the password
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
+    console.log(hash);
 
     // Create a new user 
     const newUser = new User({ username, password: hash });
