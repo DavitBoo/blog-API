@@ -1,5 +1,6 @@
 import express from "express";
 import jwt, { SignCallback } from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { User, IUser } from "../models/user";
 
 interface JwtPayload {
@@ -20,8 +21,12 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
+    //encrypt the password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+
     // Create a new user 
-    const newUser = new User({ username, password });
+    const newUser = new User({ username, password: hash });
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully" });
