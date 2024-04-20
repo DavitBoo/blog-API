@@ -29,7 +29,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
         //encrypt the password
         const salt = bcrypt_1.default.genSaltSync(10);
         const hash = bcrypt_1.default.hashSync(password, salt);
-        console.log(hash);
+        // console.log(hash);
         // Create a new user 
         const newUser = new user_1.User({ username, password: hash });
         yield newUser.save();
