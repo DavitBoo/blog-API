@@ -39,17 +39,34 @@ router.post("/register", async (req, res) => {
 
 // Login user route
 router.post("/login", async (req, res) => {
-  // const { username, password } = {username:'David', password:'password'};
   const { username, password } = req.body;
 
   const user = await User.findOne({ username });
+
+  if (!user) {
+    // Usuario no encontrado
+    return res.status(400).json({ error: "Este usuario no existe" });
+  }
+
+  // ! debería añadir algo para verificar la contraseña tokeniceda
+  // Verificar si la contraseña coincide
+  // const passwordMatch = await user.comparePassword(password);
+
+  // if (!passwordMatch) {
+  //   // Contraseña incorrecta
+  //   return res.status(401).json({ error: "Contraseña incorrecta" });
+  // }
+
+  // Usuario y contraseña válidos, generando el token
   jwt.sign({ user }, "secretkey", { expiresIn: 30 }, (err: Error | null, token?: string) => {
+    if (err) {
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
     res.json({
       token,
     });
   });
 });
-
 /*
 router.post("/logout", async (req, res) => {
   res
