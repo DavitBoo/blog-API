@@ -30,7 +30,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
         const salt = bcrypt_1.default.genSaltSync(10);
         const hash = bcrypt_1.default.hashSync(password, salt);
         // console.log(hash);
-        // Create a new user 
+        // Create a new user
         const newUser = new user_1.User({ username, password: hash });
         yield newUser.save();
         res.status(201).json({ message: "User created successfully" });
@@ -42,35 +42,39 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 // Login user route
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { username, password } = {username:'David', password:'password'};
     const { username, password } = req.body;
     const user = yield user_1.User.findOne({ username });
-    jsonwebtoken_1.default.sign({ user }, 'secretkey', { expiresIn: 30 }, (err, token) => {
+    if (!user) {
+        // Usuario no encontrado
+        return res.status(400).json({ error: "Este usuario no existe" });
+    }
+    // ! debería añadir algo para verificar la contraseña tokeniceda
+    // Verificar si la contraseña coincide
+    // const passwordMatch = await user.comparePassword(password);
+    // if (!passwordMatch) {
+    //   // Contraseña incorrecta
+    //   return res.status(401).json({ error: "Contraseña incorrecta" });
+    // }
+    // Usuario y contraseña válidos, generando el token
+    jsonwebtoken_1.default.sign({ user }, "secretkey", { expiresIn: 30 }, (err, token) => {
+        if (err) {
+            return res.status(500).json({ error: "Error interno del servidor" });
+        }
         res.json({
-            token
+            token,
         });
     });
 }));
-// // Login user route
-// router.post("/login", async (req, res) => {
-//   const { username, password } = req.body;
-//   const user: IUser | null = await User.findOne({ username });
-//   if (!user) {
-//     return res.status(404).json({ message: "User not found" });
-//   }
-//   // Sign the token with a specific callback
-//   const signCallback: SignCallback = (err, token) => {
-//     if (err) {
-//       return res.status(500).json({ message: "Error signing token" });
-//     }
-//     const nonNullableToken: string = token || '';
-//     // Use the JwtToken type for the token response
-//     const tokenResponse: JwtToken = { token: nonNullableToken };
-//     res.json(tokenResponse);
-//   };
-//   // Use the JwtPayload type for the payload
-//   jwt.sign({ user } as JwtPayload, 'secretkey', signCallback);
-// });
+/*
+router.post("/logout", async (req, res) => {
+  res
+    .clearCookie("access_token", {
+      sameSite: "none",
+      secure: true,
+    })
+    .json({ message: "Logout successful" });
+});
+*/
 router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_1.User.find();
