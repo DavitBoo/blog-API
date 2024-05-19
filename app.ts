@@ -23,7 +23,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+
+// ! using cors in this way I am allowing conections from everywhere, usefull for development, but not for producto
 app.use(cors());
+
+//! in close future replace for something like:
+// app.use(cors({
+//   origin: 'https://tu-dominio.com'  
+// }));
 
 //set up mongoose
 import mongoose from "mongoose";
