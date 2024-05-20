@@ -34,8 +34,8 @@ router.post("/posts", verifyToken_1.default, (req, res) => __awaiter(void 0, voi
         }
         else {
             //i think I wont need an else since it will stop in the error if there is one
-            const { title, body, thumbnail, category, labels } = req.body;
-            const newPost = new post_1.Post({ title, body, thumbnail, category, labels });
+            const { title, body, thumbnail, category, labels, published } = req.body;
+            const newPost = new post_1.Post({ title, body, thumbnail, category, labels, published });
             yield newPost.save();
             res.json({
                 message: "El post se ha creado",
