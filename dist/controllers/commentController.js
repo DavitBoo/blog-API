@@ -14,17 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const comment_1 = require("../models/comment");
+const post_1 = require("../models/post");
 const router = express_1.default.Router();
 // Create comment route
-router.post('/posts/:id/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/posts/:id/comments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, commentContent } = req.body;
     const postId = req.params.id;
     const newComment = new comment_1.Comment({ username, email, commentContent, postId });
     yield newComment.save();
-    res.status(201).send({ message: 'Comment created successfully' });
+    const post = yield post_1.Post.findById(postId);
+    post === null || post === void 0 ? void 0 : post.comments.push(newComment._id);
+    yield (post === null || post === void 0 ? void 0 : post.save());
+    res.status(201).send({ message: "Comment created successfully" });
 }));
 // Get all comments for a post route
-router.get('/posts/:id/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/posts/:id/comments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.id;
     // Try to find the comments for the post
     try {

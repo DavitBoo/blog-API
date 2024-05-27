@@ -33,5 +33,6 @@ const commentSchema = new mongoose_1.Schema({
     userAvatar: { type: String, default: "default-avatar.png" },
     //answers: [{ type: Schema.Types.ObjectId, ref: 'Comment' }], // IDs of replies
     votes: { type: Number, default: 0 },
+    postId: { type: mongoose_1.Schema.Types.ObjectId, ref: "Post", required: true }
 });
 exports.Comment = mongoose_1.default.model("Comment", commentSchema);
