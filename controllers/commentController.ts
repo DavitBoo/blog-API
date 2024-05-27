@@ -7,9 +7,9 @@ const router = express.Router();
 // Create comment route
 router.post('/posts/:id/comments', async (req, res) => {
   const { username, email, commentContent } = req.body;
-  // const postId = req.params.id;
+  const postId = req.params.id;
 
-  const newComment = new Comment({ username, email, commentContent /*, postId*/ });
+  const newComment = new Comment({ username, email, commentContent , postId });
   await newComment.save();
 
   res.status(201).send({ message: 'Comment created successfully' });
