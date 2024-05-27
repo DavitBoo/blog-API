@@ -29,7 +29,7 @@ const commentSchema = new mongoose_1.Schema({
     username: { type: String, required: true },
     email: { type: String, optional: true },
     commentContent: { type: String, required: true },
-    timestamp: { type: Date, required: true },
+    timestamp: { type: Date, default: Date.now() },
     userAvatar: { type: String, default: "default-avatar.png" },
     //answers: [{ type: Schema.Types.ObjectId, ref: 'Comment' }], // IDs of replies
     votes: { type: Number, default: 0 },
