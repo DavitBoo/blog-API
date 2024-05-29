@@ -64,4 +64,31 @@ router.post('/posts/:id/comments/:commentId', async(req, res) => {
   }
 })
 
+
+// delete comment 
+router.delete('/posts/:id/comments/:commentId', async(req, res) => {
+  const postId = req.params.id;
+  const commentId = req.params.commentId
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).send({ message: 'Post not found' });
+    }
+
+    const commentIndex = post.comments.indexOf(commentId);
+    await Comment.findByIdAndDelete(commentId);
+
+    post.comments.splice(commentIndex, 1);
+
+    await post.save();
+
+    res.send({ message: 'Comment deleted successfully' });
+
+  } catch (error) {
+    res.status(500).send({ message: 'Server error', error });
+  }
+})
+
 export default router;
