@@ -2,6 +2,7 @@ import express from "express";
 import { Comment } from "../models/comment";
 import { Post } from "../models/post";
 
+
 const router = express.Router();
 
 // Create comment route
@@ -35,5 +36,32 @@ router.get("/posts/:id/comments", async (req, res) => {
 
   // Send the comments to the client
 });
+
+
+// edit comment 
+router.post('/posts/:id/comments/:commentId', async(req, res) => {
+  // const postId = req.params.id;
+  const commentId = req.params.commentId
+  const { commentContent, username, email } = req.body;
+
+
+  try {
+    // const post = await Post.findById(postId);
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      return res.status(404).send({ message: 'Comment not found' });
+    }
+
+    if (commentContent) comment.commentContent = commentContent;
+    // if (username) comment.username = username;
+    // if (email) comment.email = email;
+
+    await comment.save(); 
+
+  } catch (error) {
+    res.status(500).send({ message: 'Server error', error });
+  }
+})
 
 export default router;
