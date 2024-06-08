@@ -56,7 +56,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     //   return res.status(401).json({ error: "Contraseña incorrecta" });
     // }
     // Usuario y contraseña válidos, generando el token
-    jsonwebtoken_1.default.sign({ user }, "secretkey", { expiresIn: 30 }, (err, token) => {
+    jsonwebtoken_1.default.sign({ user }, "secretkey", { expiresIn: 300 }, (err, token) => {
         if (err) {
             return res.status(500).json({ error: "Error interno del servidor" });
         }

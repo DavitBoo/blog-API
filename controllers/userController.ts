@@ -58,7 +58,7 @@ router.post("/login", async (req, res) => {
   // }
 
   // Usuario y contraseña válidos, generando el token
-  jwt.sign({ user }, "secretkey", { expiresIn: 30 }, (err: Error | null, token?: string) => {
+  jwt.sign({ user }, "secretkey", { expiresIn: 300 }, (err: Error | null, token?: string) => {
     if (err) {
       return res.status(500).json({ error: "Error interno del servidor" });
     }
