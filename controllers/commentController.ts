@@ -64,6 +64,28 @@ router.post('/posts/:id/comments/:commentId', async(req, res) => {
   }
 })
 
+// edit comment
+router.put('/posts/:id/comments/:commentId', async (req, res) => {
+  const commentId = req.params.commentId;
+  const { commentContent } = req.body;
+
+  try {
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+      return res.status(404).send({ message: 'Comment not found' });
+    }
+
+    if (commentContent) comment.commentContent = commentContent;
+
+    await comment.save();
+
+    res.send({ message: 'Comment updated successfully', comment });
+  } catch (error) {
+    res.status(500).send({ message: 'Server error', error });
+  }
+});
+
 
 // delete comment 
 router.delete('/posts/:id/comments/:commentId', async(req, res) => {
