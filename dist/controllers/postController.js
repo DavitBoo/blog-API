@@ -80,10 +80,38 @@ router.get("/posts/:postId", (req, res) => __awaiter(void 0, void 0, void 0, fun
         return;
     }
 }));
-router.put("/posts/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// Update post route
+router.put("/posts/:id", verifyToken_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    // code to update an article...
-    res.json(req.body);
+    const tokenString = req.token;
+    jsonwebtoken_1.default.verify(tokenString, "secretkey", (err, authData) => __awaiter(void 0, void 0, void 0, function* () {
+        if (err) {
+            if (err.name === "TokenExpiredError") {
+                res.status(401).send({ error: "Token has expired" });
+            }
+            else {
+                res.status(401).send({ error: "Unauthorized" });
+            }
+        }
+        else {
+            const { title, body, thumbnail, category, labels, published } = req.body;
+            try {
+                const updatedPost = yield post_1.Post.findByIdAndUpdate(id, { title, body, thumbnail, category, labels, published }, { new: true, runValidators: true });
+                if (!updatedPost) {
+                    res.status(404).json({ message: "Post not found" });
+                    return;
+                }
+                res.json({
+                    message: "El post se ha actualizado",
+                    post: updatedPost,
+                    authData,
+                });
+            }
+            catch (error) {
+                res.status(500).json({ error: "Internal server error" });
+            }
+        }
+    }));
 }));
 router.delete("/posts/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;

@@ -78,10 +78,43 @@ router.get("/posts/:postId", async (req, res) => {
   }
 });
 
-router.put("/posts/:id", async (req, res) => {
+// Update post route
+router.put("/posts/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
-  // code to update an article...
-  res.json(req.body);
+  const tokenString = (req as CustomRequest).token as string;
+
+  jwt.verify(tokenString, "secretkey", async (err, authData) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        res.status(401).send({ error: "Token has expired" });
+      } else {
+        res.status(401).send({ error: "Unauthorized" });
+      }
+    } else {
+      const { title, body, thumbnail, category, labels, published } = req.body;
+
+      try {
+        const updatedPost = await Post.findByIdAndUpdate(
+          id,
+          { title, body, thumbnail, category, labels, published },
+          { new: true, runValidators: true }
+        );
+
+        if (!updatedPost) {
+          res.status(404).json({ message: "Post not found" });
+          return;
+        }
+
+        res.json({
+          message: "El post se ha actualizado",
+          post: updatedPost,
+          authData,
+        });
+      } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  });
 });
 
 router.delete("/posts/:id", async (req, res) => {
