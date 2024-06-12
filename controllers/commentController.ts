@@ -1,7 +1,13 @@
 import express from "express";
 import { Comment } from "../models/comment";
 import { Post } from "../models/post";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import verifyToken from "../middleware/verifyToken";
 
+
+interface CustomRequest extends Request {
+  token: string | JwtPayload;
+}
 
 const router = express.Router();
 
@@ -65,25 +71,40 @@ router.post('/posts/:id/comments/:commentId', async(req, res) => {
 })
 
 // edit comment
-router.put('/posts/:id/comments/:commentId', async (req, res) => {
+router.put('/posts/:id/comments/:commentId', verifyToken, async (req, res) => {
+  
   const commentId = req.params.commentId;
   const { commentContent } = req.body;
+  const tokenString = (req as any).token as string; // because of TS types
 
-  try {
-    const comment = await Comment.findById(commentId);
+  jwt.verify(tokenString, "secretkey", async (err, authData) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        res.status(401).send({ error: "Token has expired" });
+      } else {
+        res.status(401).send({ error: "Unauthorized" });
+      }
+    } else {
+      try {
+        const comment = await Comment.findById(commentId);
+    
+        if (!comment) {
+          return res.status(404).send({ message: 'Comment not found' });
+        }
+    
+        if (commentContent) comment.commentContent = commentContent;
+    
+        await comment.save();
+    
+        res.send({ message: 'Comment updated successfully', comment });
+      } catch (error) {
+        res.status(500).send({ message: 'Server error', error });
+      }
+    }})
 
-    if (!comment) {
-      return res.status(404).send({ message: 'Comment not found' });
-    }
 
-    if (commentContent) comment.commentContent = commentContent;
-
-    await comment.save();
-
-    res.send({ message: 'Comment updated successfully', comment });
-  } catch (error) {
-    res.status(500).send({ message: 'Server error', error });
-  }
+  
+  
 });
 
 

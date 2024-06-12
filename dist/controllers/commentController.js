@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const comment_1 = require("../models/comment");
 const post_1 = require("../models/post");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const router = express_1.default.Router();
 // Create comment route
 router.post("/posts/:id/comments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -64,22 +66,35 @@ router.post('/posts/:id/comments/:commentId', (req, res) => __awaiter(void 0, vo
     }
 }));
 // edit comment
-router.put('/posts/:id/comments/:commentId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/posts/:id/comments/:commentId', verifyToken_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const commentId = req.params.commentId;
     const { commentContent } = req.body;
-    try {
-        const comment = yield comment_1.Comment.findById(commentId);
-        if (!comment) {
-            return res.status(404).send({ message: 'Comment not found' });
+    const tokenString = req.token; // because of TS types
+    jsonwebtoken_1.default.verify(tokenString, "secretkey", (err, authData) => __awaiter(void 0, void 0, void 0, function* () {
+        if (err) {
+            if (err.name === "TokenExpiredError") {
+                res.status(401).send({ error: "Token has expired" });
+            }
+            else {
+                res.status(401).send({ error: "Unauthorized" });
+            }
         }
-        if (commentContent)
-            comment.commentContent = commentContent;
-        yield comment.save();
-        res.send({ message: 'Comment updated successfully', comment });
-    }
-    catch (error) {
-        res.status(500).send({ message: 'Server error', error });
-    }
+        else {
+            try {
+                const comment = yield comment_1.Comment.findById(commentId);
+                if (!comment) {
+                    return res.status(404).send({ message: 'Comment not found' });
+                }
+                if (commentContent)
+                    comment.commentContent = commentContent;
+                yield comment.save();
+                res.send({ message: 'Comment updated successfully', comment });
+            }
+            catch (error) {
+                res.status(500).send({ message: 'Server error', error });
+            }
+        }
+    }));
 }));
 // delete comment 
 router.delete('/posts/:id/comments/:commentId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
