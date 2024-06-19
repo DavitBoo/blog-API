@@ -120,7 +120,7 @@ router.delete("/posts/:id", (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!deletedPost) {
             return res.status(404).json({ error: "Post not found" });
         }
-        res.status(200).json({ deleted: id, redirect: "/posts" });
+        res.status(200).json({ deleted: id });
     }
     catch (error) {
         console.error(error);
