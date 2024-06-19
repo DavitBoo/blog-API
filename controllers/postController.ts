@@ -125,7 +125,7 @@ router.delete("/posts/:id", async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
     
-    res.status(200).json({ deleted: id });
+    res.status(200).json({ deleted: id, redirect: "/posts" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while deleting the post" });
