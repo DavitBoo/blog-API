@@ -24,14 +24,13 @@ router.post("/posts", verifyToken, async (req, res) => {
         res.status(401).send({ error: "Unauthorized" });
       }
     } else {
-      
       //i think I wont need an else since it will stop in the error if there is one
-  const { title, body, thumbnail, category, labels, published } = req.body;
-  const newPost = new Post({ title, body, thumbnail, category, labels, published });
-  await newPost.save();
+      const { title, body, thumbnail, category, labels, published } = req.body;
+      const newPost = new Post({ title, body, thumbnail, category, labels, published });
+      await newPost.save();
 
-  res.json({
-    message: "El post se ha creado",
+      res.json({
+        message: "El post se ha creado",
         authData,
       });
 
@@ -119,8 +118,18 @@ router.put("/posts/:id", verifyToken, async (req, res) => {
 
 router.delete("/posts/:id", async (req, res) => {
   const { id } = req.params;
-  // code to delete an article...
-  res.json({ deleted: id });
+  try {
+    const deletedPost = await Post.findByIdAndDelete(id);
+    
+    if (!deletedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    
+    res.status(200).json({ deleted: id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while deleting the post" });
+  }
 });
 
 export default router;

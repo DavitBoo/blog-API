@@ -115,7 +115,16 @@ router.put("/posts/:id", verifyToken_1.default, (req, res) => __awaiter(void 0, 
 }));
 router.delete("/posts/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    // code to delete an article...
-    res.json({ deleted: id });
+    try {
+        const deletedPost = yield post_1.Post.findByIdAndDelete(id);
+        if (!deletedPost) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+        res.status(200).json({ deleted: id });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while deleting the post" });
+    }
 }));
 exports.default = router;
