@@ -147,4 +147,24 @@ router.delete("/label/:labelId", async (req, res) => {
   }
 });
 
+// Edit a label
+router.put("/label/:labelId", async (req, res) => {
+  const labelId = req.params.labelId;
+  const { name, description } = req.body;
+  try {
+    const label = await Label.findByIdAndUpdate(
+      labelId,
+      { name, description },
+      { new: true, runValidators: true }
+    );
+    if (!label) {
+      return res.status(404).json({ error: "Label not found" });
+    }
+    res.status(200).json(label);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+    return;
+  }
+});
+
 export default router;

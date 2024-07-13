@@ -142,4 +142,20 @@ router.delete("/label/:labelId", (req, res) => __awaiter(void 0, void 0, void 0,
         return;
     }
 }));
+// Edit a label
+router.put("/label/:labelId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const labelId = req.params.labelId;
+    const { name, description } = req.body;
+    try {
+        const label = yield label_1.Label.findByIdAndUpdate(labelId, { name, description }, { new: true, runValidators: true });
+        if (!label) {
+            return res.status(404).json({ error: "Label not found" });
+        }
+        res.status(200).json(label);
+    }
+    catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+        return;
+    }
+}));
 exports.default = router;
