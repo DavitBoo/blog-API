@@ -127,4 +127,19 @@ router.delete("/posts/:id", (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(500).json({ error: "An error occurred while deleting the post" });
     }
 }));
+// Delete a label
+router.delete("/label/:labelId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const labelId = req.params.labelId;
+    try {
+        const label = yield label_1.Label.findByIdAndDelete(labelId);
+        if (!label) {
+            return res.status(404).json({ error: "Label not found" });
+        }
+        res.status(200).send({ message: "Label deleted successfully" });
+    }
+    catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+        return;
+    }
+}));
 exports.default = router;
