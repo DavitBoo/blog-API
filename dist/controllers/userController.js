@@ -57,6 +57,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     // }
     // Usuario y contraseña válidos, generando el token
     jsonwebtoken_1.default.sign({ user }, "secretkey", { expiresIn: 300 }, (err, token) => {
+        console.log("Token generado en:", new Date().toISOString());
         if (err) {
             return res.status(500).json({ error: "Error interno del servidor" });
         }
