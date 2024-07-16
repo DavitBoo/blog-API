@@ -28,7 +28,7 @@ router.get("/label", async (req, res) => {
 router.get("/label/:labelId", async (req, res) => {
   const labelId = req.params.labelId;
   try {
-    const labels = await Label.findById({ labelId });
+    const labels = await Label.findById(labelId);
     res.json(labels);
   } catch (error) {
     // Handle the error
