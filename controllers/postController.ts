@@ -13,28 +13,21 @@ interface CustomRequest extends Request {
 
 // Create post route
 router.post("/posts", verifyToken, async (req, res) => {
-  const tokenString = (req as CustomRequest).token as string; // because of TS types
+  const tokenString = (req as CustomRequest).token as string;
+  console.log('a ver si esto es el puto problema');
+  console.log(tokenString);
   jwt.verify(tokenString, "secretkey", async (err, authData) => {
-    console.log(req.body);
     if (err) {
-      console.error(err);
       if (err.name === "TokenExpiredError") {
         res.status(401).send({ error: "Token has expired" });
       } else {
         res.status(401).send({ error: "Unauthorized" });
       }
     } else {
-      //i think I wont need an else since it will stop in the error if there is one
       const { title, body, thumbnail, category, labels, published } = req.body;
       const newPost = new Post({ title, body, thumbnail, category, labels, published });
       await newPost.save();
-
-      res.json({
-        message: "El post se ha creado",
-        authData,
-      });
-
-      // res.status(201).send({ message: "Post created successfully" });
+      res.json({ message: "El post se ha creado", authData });
     }
   });
 });

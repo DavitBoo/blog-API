@@ -20,11 +20,11 @@ const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const router = express_1.default.Router();
 // Create post route
 router.post("/posts", verifyToken_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const tokenString = req.token; // because of TS types
+    const tokenString = req.token;
+    console.log('a ver si esto es el puto problema');
+    console.log(tokenString);
     jsonwebtoken_1.default.verify(tokenString, "secretkey", (err, authData) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(req.body);
         if (err) {
-            console.error(err);
             if (err.name === "TokenExpiredError") {
                 res.status(401).send({ error: "Token has expired" });
             }
@@ -33,15 +33,10 @@ router.post("/posts", verifyToken_1.default, (req, res) => __awaiter(void 0, voi
             }
         }
         else {
-            //i think I wont need an else since it will stop in the error if there is one
             const { title, body, thumbnail, category, labels, published } = req.body;
             const newPost = new post_1.Post({ title, body, thumbnail, category, labels, published });
             yield newPost.save();
-            res.json({
-                message: "El post se ha creado",
-                authData,
-            });
-            // res.status(201).send({ message: "Post created successfully" });
+            res.json({ message: "El post se ha creado", authData });
         }
     }));
 }));
