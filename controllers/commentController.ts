@@ -80,7 +80,8 @@ router.put('/posts/:id/comments/:commentId', verifyToken, async (req, res) => {
   jwt.verify(tokenString, "secretkey", async (err, authData) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
-        res.status(401).send({ error: "Token has expired" });
+        res.status(401).send({ err });
+        // res.status(401).send({ error: "Token has expired" });
       } else {
         res.status(401).send({ error: "Unauthorized" });
       }

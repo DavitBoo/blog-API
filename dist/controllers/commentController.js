@@ -73,7 +73,8 @@ router.put('/posts/:id/comments/:commentId', verifyToken_1.default, (req, res) =
     jsonwebtoken_1.default.verify(tokenString, "secretkey", (err, authData) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
             if (err.name === "TokenExpiredError") {
-                res.status(401).send({ error: "Token has expired" });
+                res.status(401).send({ err });
+                // res.status(401).send({ error: "Token has expired" });
             }
             else {
                 res.status(401).send({ error: "Unauthorized" });
